@@ -6,6 +6,7 @@ import com.example.messenger.MEMBER.repository.MemberRepository;
 import com.example.messenger.USER.entity.User;
 import com.example.messenger.USER.service.CurrentUserProvider;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -21,6 +22,7 @@ public class MemberService {
         this.currentUserProvider = currentUserProvider;
     }
 
+    @Transactional
     public void patchLastReadMessageId(
             long conversationId,
             long lastReadMessageId
