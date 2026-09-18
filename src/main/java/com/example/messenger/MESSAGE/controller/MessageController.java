@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -36,7 +36,7 @@ public class MessageController {
     @GetMapping("/api/v1/conversations/{conversationId}/messages")
     public ResponseEntity<GetMessagesResponse> getMessage(
             @PathVariable long conversationId,
-            @RequestParam(name = "lastCreatedAt", required = false) LocalDateTime lastCreatedAt,
+            @RequestParam(name = "lastCreatedAt", required = false) Instant lastCreatedAt,
             @RequestParam(name = "lastId", required = false) Long lastMessageId
     ) {
 

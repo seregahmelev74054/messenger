@@ -4,7 +4,7 @@ import com.example.messenger.CONVERSATION.entity.Conversation;
 import com.example.messenger.MEMBER.entity.Member;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 
 @Entity
@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
         name = "messages",
         //uniqueConstraints = {@UniqueConstraint(columnNames = "login"), @UniqueConstraint(columnNames = "email")}
         indexes = {
-                @Index(name = "idx_message_conversationId_createdAt_id", columnList = "conversation_id, created_at, id")
+                @Index(name = "idx_message_conversationId_createdAt_id", columnList = "conversation_id, created_at, id"),
+                @Index(name = "idx_message_deletions_message_id", columnList = "message_id")
         }
 )
 public class Message {
@@ -35,13 +36,13 @@ public class Message {
 
     private String text;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = Instant.now();
     }
 
-    private LocalDateTime deletedAt;
+    private Instant deletedAt;
 
 
     public long getId() {
@@ -60,11 +61,11 @@ public class Message {
         return text;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getDeletedAt() {
+    public Instant getDeletedAt() {
         return deletedAt;
     }
 
@@ -81,7 +82,7 @@ public class Message {
         this.text = text;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
+    public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 }

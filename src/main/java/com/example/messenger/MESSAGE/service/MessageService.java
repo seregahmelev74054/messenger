@@ -23,7 +23,7 @@ import com.example.messenger.MEMBER.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +70,7 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public GetMessagesResponse getMessages(long conversationId, LocalDateTime lastCreatedAt, Long lastMessageId) {
+    public GetMessagesResponse getMessages(long conversationId, Instant lastCreatedAt, Long lastMessageId) {
 
         User currentUser = currentUserProvider.getCurrentUser();
 
@@ -133,7 +133,7 @@ public class MessageService {
                 .orElseThrow(() -> new MessageNotFoundException(""));
 
         message.setText("");
-        message.setDeletedAt(LocalDateTime.now());
+        message.setDeletedAt(Instant.now());
 
         messageRepository.save(message);
     }

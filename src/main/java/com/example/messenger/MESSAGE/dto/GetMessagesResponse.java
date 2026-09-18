@@ -1,6 +1,6 @@
 package com.example.messenger.MESSAGE.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class GetMessagesResponse {
@@ -8,7 +8,7 @@ public class GetMessagesResponse {
     public GetMessagesResponse(
             List<MessageResponse> messages,
             boolean hasMore,
-            LocalDateTime nextLastCreatedAt,
+            Instant nextLastCreatedAt,
             Long nextLastId) {
         this.messages = messages;
         this.hasMore = hasMore;
@@ -20,7 +20,7 @@ public class GetMessagesResponse {
 
     private boolean hasMore;
 
-    private LocalDateTime nextLastCreatedAt;
+    private Instant nextLastCreatedAt;
 
     private Long nextLastId;
 
@@ -33,7 +33,7 @@ public class GetMessagesResponse {
         return hasMore;
     }
 
-    public LocalDateTime getNextLastCreatedAt() {
+    public Instant getNextLastCreatedAt() {
         return nextLastCreatedAt;
     }
 

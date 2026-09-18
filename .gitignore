@@ -33,7 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 
-
-application.yaml
+.env
 *.png
 *.rar

@@ -11,6 +11,10 @@ import jakarta.persistence.*;
         name = "members",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"user_id", "conversation_id"})
+        },
+        indexes = {
+                @Index(name = "idx_members_conversation_id", columnList = "conversation_id"),
+                @Index(name = "idx_members_user_id", columnList = "user_id")
         }
 )
 public class Member {

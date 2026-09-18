@@ -2,7 +2,7 @@ package com.example.messenger.CONVERSATION.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 
 @Entity
@@ -30,19 +30,19 @@ public class Conversation {
     @Enumerated(EnumType.STRING)
     private ConversationVisibility visibility;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    private LocalDateTime deletedAt;
+    private Instant deletedAt;
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = Instant.now();
     }
 
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @PreUpdate
-    void onUpdate() { updatedAt = LocalDateTime.now(); }
+    void onUpdate() { updatedAt = Instant.now(); }
 
 
     public long getId() {
@@ -65,15 +65,15 @@ public class Conversation {
         return visibility;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public LocalDateTime getDeletedAt() {
+    public Instant getDeletedAt() {
         return deletedAt;
     }
 

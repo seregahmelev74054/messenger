@@ -2,7 +2,7 @@ package com.example.messenger.USER.dto.currentUser;
 
 import com.example.messenger.USER.entity.User;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class CurrentUserResponse {
 
@@ -22,5 +22,5 @@ public class CurrentUserResponse {
 
     private String displayName;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

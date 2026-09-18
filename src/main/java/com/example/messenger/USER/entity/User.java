@@ -3,7 +3,7 @@ package com.example.messenger.USER.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 
 
@@ -35,11 +35,11 @@ public class User {
 
     private String displayName;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = Instant.now();
     }
 
 
@@ -80,7 +80,7 @@ public class User {
         return displayName;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 }

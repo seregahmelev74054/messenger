@@ -3,7 +3,7 @@ package com.example.messenger.MESSAGE.dto;
 import com.example.messenger.MEMBER.dto.MemberResponse;
 import com.example.messenger.MESSAGE.entity.Message;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class MessageResponse {
 
@@ -21,9 +21,9 @@ public class MessageResponse {
 
     private String text;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    private LocalDateTime deletedAt;
+    private Instant deletedAt;
 
     public long getId() {
         return id;
@@ -37,11 +37,11 @@ public class MessageResponse {
         return text;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getDeletedAt() {
+    public Instant getDeletedAt() {
         return deletedAt;
     }
 }

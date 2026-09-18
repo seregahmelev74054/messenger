@@ -3,7 +3,7 @@ package com.example.messenger.MESSAGE.entity;
 import com.example.messenger.MEMBER.entity.Member;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(
@@ -30,10 +30,10 @@ public class MessageDeletion {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    private LocalDateTime deletedAt;
+    private Instant deletedAt;
     @PrePersist
     void onCreate() {
-        deletedAt = LocalDateTime.now();
+        deletedAt = Instant.now();
     }
 
     public void setMessage(Message message) {

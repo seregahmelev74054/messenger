@@ -5,7 +5,7 @@ import com.example.messenger.CONVERSATION.entity.ConversationType;
 import com.example.messenger.CONVERSATION.entity.ConversationVisibility;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class GetConversationResponse {
 
@@ -25,7 +25,7 @@ public class GetConversationResponse {
 
     private ConversationVisibility visibility;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     public long getId() {
         return id;
@@ -43,7 +43,7 @@ public class GetConversationResponse {
         return visibility;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 }

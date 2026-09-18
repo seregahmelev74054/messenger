@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
                     "order by  m.created_at desc, m.id desc " +
                     "limit 51"
     )
-    List<Message> findByConversationWithKeySetForMember(@Param("memId") long memberId, @Param("conId") long conId, @Param("lastCreatedAt") LocalDateTime lastCreatedAt, @Param("lastMessageId") long lastMessageId);
+    List<Message> findByConversationWithKeySetForMember(@Param("memId") long memberId, @Param("conId") long conId, @Param("lastCreatedAt") Instant lastCreatedAt, @Param("lastMessageId") long lastMessageId);
 
     @Query(
             nativeQuery = true,
@@ -63,7 +63,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
                     "order by  m.created_at desc, m.id desc " +
                     "limit 51"
     )
-    List<Message> findByConversationWithKeySet(@Param("conId") long conId, @Param("lastCreatedAt") LocalDateTime lastCreatedAt, @Param("lastMessageId") long lastMessageId);
+    List<Message> findByConversationWithKeySet(@Param("conId") long conId, @Param("lastCreatedAt") Instant lastCreatedAt, @Param("lastMessageId") long lastMessageId);
 
     @Query(
             nativeQuery = true,
