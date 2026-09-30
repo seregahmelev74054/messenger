@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,30 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     )
     Optional<Member> findByUserIdAndConversationId(@Param("userId") long userId, @Param("conId") long conId);
+
+    @Query("SELECT m FROM Member m " +
+            "INNER JOIN Conversation c " +
+            "ON c.id = m.conversation.id " +
+            "WHERE m.user.id = :userId " +
+            "AND c.deletedAt IS NULL " +
+            "AND m.status = ACTIVE " +
+            "ORDER BY c.updatedAt DESC, c.id desc " +
+            "limit 51")
+    List<Member> findActiveMember(@Param("userId") long userId);
+
+    @Query(
+            nativeQuery = true,
+
+            value = "SELECT * FROM members m " +
+                    "INNER JOIN conversations c " +
+                    "ON c.id = m.conversation_id " +
+                    "WHERE m.user_id = :userId " +
+                    "AND c.deleted_at IS NULL " +
+                    "AND m.status = ACTIVE " +
+                    "and (c.updated_at, c.id) < (:lastUpdatedAt, :lastConId) " +
+                    "ORDER BY c.updated_at DESC, c.id desc " +
+                    "limit 51")
+    List<Member> findActiveMemberWithKeySet(@Param("userId") long userId, @Param("lastUpdatedAt") Instant lastUpdatedAt, @Param("lastConId") long lastConId);
+
+
 }

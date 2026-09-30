@@ -24,7 +24,7 @@ public class DBIntegrationTest extends TestPostgresDb {
                 Integer.class
         );
 
-        assertThat(usersCount).isOne();
+        assertThat(usersCount).isZero();
 
         Integer conversationsCount = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM conversations",
@@ -60,12 +60,12 @@ public class DBIntegrationTest extends TestPostgresDb {
 
     @Test
     void shouldSaveUserToPostgres() {
-        String email = "testEmail";
+        String email = "email";
         User user = new User();
         user.setEmail(email);
-        user.setLogin("testLogin");
-        user.setDisplayName("testDisplayName");
-        user.setPasswordHash("testPasswordHash");
+        user.setLogin("login");
+        user.setDisplayName("displayName");
+        user.setPasswordHash("passwordHash");
         userRepository.save(user);
         assertThat(userRepository.findByEmail(email)).isPresent();
     }

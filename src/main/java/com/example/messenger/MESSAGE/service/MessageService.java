@@ -67,6 +67,7 @@ public class MessageService {
         message.setText(request.getText());
 
         messageRepository.save(message);
+        message.getConversation().setUpdatedAt(Instant.now());
     }
 
     @Transactional(readOnly = true)
@@ -136,6 +137,7 @@ public class MessageService {
         message.setDeletedAt(Instant.now());
 
         messageRepository.save(message);
+        message.getConversation().setUpdatedAt(Instant.now());
     }
 
     @Transactional

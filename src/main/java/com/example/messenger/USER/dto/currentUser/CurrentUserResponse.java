@@ -23,4 +23,24 @@ public class CurrentUserResponse {
     private String displayName;
 
     private Instant createdAt;
+
+    public long getId() {
+        return id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }

@@ -9,6 +9,11 @@ public class MemberResponse {
         this.displayName = member.getUser().getDisplayName();
     }
 
+    public MemberResponse(long id, String displayName) {
+        this.id = id;
+        this.displayName = displayName;
+    }
+
     private long id;
 
     private String displayName;

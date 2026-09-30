@@ -37,6 +37,7 @@ public class Conversation {
     @PrePersist
     void onCreate() {
         createdAt = Instant.now();
+        updatedAt = Instant.now();
     }
 
     private Instant updatedAt;
@@ -93,4 +94,6 @@ public class Conversation {
     public void setVisibility(ConversationVisibility visibility) {
         this.visibility = visibility;
     }
+
+    public void setUpdatedAt(Instant updatedAt) {this.updatedAt = updatedAt;}
 }

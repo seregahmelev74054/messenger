@@ -10,7 +10,9 @@ import jakarta.persistence.*;
 @Table(
         name = "members",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "conversation_id"})
+                @UniqueConstraint(columnNames = {"user_id", "conversation_id"}),
+                @UniqueConstraint(columnNames = {"id", "conversation_id"})
+
         },
         indexes = {
                 @Index(name = "idx_members_conversation_id", columnList = "conversation_id"),
@@ -33,6 +35,7 @@ public class Member {
     @PrePersist
     void onCreate() {
         status = MemberStatus.ACTIVE;
+        lastReadMessageId = 0L;
     }
 
     @ManyToOne(optional = false)

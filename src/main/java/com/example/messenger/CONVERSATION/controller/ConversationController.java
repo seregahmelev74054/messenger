@@ -2,12 +2,15 @@ package com.example.messenger.CONVERSATION.controller;
 
 import com.example.messenger.CONVERSATION.dto.CreateConversationRequest;
 import com.example.messenger.CONVERSATION.dto.GetConversationResponse;
+import com.example.messenger.CONVERSATION.dto.GetMyConversationsResponse;
 import com.example.messenger.CONVERSATION.service.ConversationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 
 @RestController
 public class ConversationController {
@@ -27,8 +30,11 @@ public class ConversationController {
     }
 
     @GetMapping("/api/v1/me/conversations")
-    public Page<GetConversationResponse> getMyConversations(Pageable pageable) {
-        return conversationService.getMyConversations(pageable);
+    public ResponseEntity<GetMyConversationsResponse> getMyConversations(
+            @RequestParam(name = "lastUpdatedAt", required = false) Instant lastUpdatedAt,
+            @RequestParam(name = "lastConversationId", required = false) Long lastConversationId
+    ) {
+        return ResponseEntity.ok(conversationService.getMyConversations(lastUpdatedAt, lastConversationId));
     }
 
     @GetMapping("/api/v1/conversations")
