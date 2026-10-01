@@ -6,8 +6,11 @@ import com.example.messenger.USER.dto.login.response.LoginUserResponse;
 import com.example.messenger.USER.dto.register.RegisterUserRequest;
 
 import com.example.messenger.USER.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,11 +37,16 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/auth/login")
-    public ResponseEntity<LoginUserResponse> login(@Valid @RequestBody LoginUserRequest request) {
+    public ResponseEntity<Void> login(
+            @Valid @RequestBody LoginUserRequest request,
+            HttpServletResponse response
+    ) {
 
-        LoginUserResponse response = userService.login(request);
+        ResponseCookie cookie = userService.login(request);
 
-        return ResponseEntity.ok(response);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/api/v1/users/me")

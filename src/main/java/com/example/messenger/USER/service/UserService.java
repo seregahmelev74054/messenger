@@ -1,5 +1,6 @@
 package com.example.messenger.USER.service;
 
+import com.example.messenger.JWT.JwtProperties;
 import com.example.messenger.USER.dto.currentUser.CurrentUserResponse;
 import com.example.messenger.USER.dto.login.request.LoginRequestCheck;
 import com.example.messenger.USER.dto.login.request.LoginRequestType;
@@ -12,6 +13,8 @@ import com.example.messenger.EXCEPTION.UserAlreadyExistsException;
 import com.example.messenger.EXCEPTION.UserLoginException;
 import com.example.messenger.USER.repository.UserRepository;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,16 +30,20 @@ public class UserService {
 
     private final CurrentUserProvider currentUserProvider;
 
+    private final JwtProperties jwtProperties;
+
     public UserService(
             UserRepository userRepository,
             JwtService jwtService,
             BCryptPasswordEncoder encoder,
-            CurrentUserProvider currentUserProvider
+            CurrentUserProvider currentUserProvider,
+            JwtProperties jwtProperties
     ) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.encoder = encoder;
         this.currentUserProvider = currentUserProvider;
+        this.jwtProperties = jwtProperties;
     }
 
     @Transactional
@@ -63,7 +70,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public LoginUserResponse login(LoginUserRequest request) {
+    public ResponseCookie login(LoginUserRequest request) {
 
         User user;
 
@@ -82,7 +89,15 @@ public class UserService {
         if (encoder.matches(request.getPassword(), user.getPasswordHash())) {
             String token = jwtService.generateToken(user);
 
-            return new LoginUserResponse(token);
+            ResponseCookie cookie = ResponseCookie.from("access_token", token)
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(jwtProperties.getExpiration() / 1000)
+                    .build();
+
+            return cookie;
         }
         else throw new UserLoginException("Login failed");
     }

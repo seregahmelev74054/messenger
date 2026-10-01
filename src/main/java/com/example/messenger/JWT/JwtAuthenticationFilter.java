@@ -4,6 +4,7 @@ import com.example.messenger.USER.entity.User;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,19 +36,26 @@ public class JwtAuthenticationFilter
             throws ServletException, IOException
     {
 
-        String authHeader = request.getHeader("Authorization");
+        String jwt = "";
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("access_token".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                }
+            }
+        }
+        else {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String jwt = authHeader.substring(7);
-
-        /*if (jwt.isBlank()) {
+        if (jwt.isBlank()) {
             filterChain.doFilter(request, response);
             return;
-        }*/
+        }
 
         Long userId;
 

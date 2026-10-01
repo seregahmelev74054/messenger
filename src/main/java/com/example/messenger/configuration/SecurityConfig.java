@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -50,11 +51,12 @@ public class SecurityConfig {
                 "OPTIONS"
         ));
 
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of(
+                "Content-Type",
+                "X-CSRF-TOKEN"
+        ));
 
-        // Если JWT передаёшь через Authorization header,
-        // это не обязательно.
-        configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
@@ -70,7 +72,11 @@ public class SecurityConfig {
         http
                 .cors(cors -> {})
 
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(
+                                CookieCsrfTokenRepository.withHttpOnlyFalse()
+                        )
+                )
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/app.js", "/styles.css", "/favicon.ico").permitAll()
