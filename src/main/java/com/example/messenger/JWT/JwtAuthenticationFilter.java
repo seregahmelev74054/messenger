@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter
             return;
         }
 
-        if (jwt.isBlank()) {
+        if (jwt == null || jwt.isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }
