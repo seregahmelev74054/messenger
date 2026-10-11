@@ -20,8 +20,15 @@ import com.example.messenger.EXCEPTION.ConversationNotFoundException;
 import com.example.messenger.EXCEPTION.MessageNotFoundException;
 import com.example.messenger.EXCEPTION.UnprocessableRequestException;
 import com.example.messenger.MEMBER.repository.MemberRepository;
+import com.example.messenger.webSocket.dto.EventType;
+import com.example.messenger.webSocket.dto.MDType;
+import com.example.messenger.webSocket.dto.MessageDeletedEvent;
+import com.example.messenger.webSocket.dto.NewMessageEvent;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,19 +42,22 @@ public class MessageService {
     private final CurrentUserProvider currentUserProvider;
     private final MemberRepository memberRepository;
     private final MessageDeletionRepository messageDeletionRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public MessageService(
             MessageRepository messageRepository,
             ConversationRepository conversationRepository,
             CurrentUserProvider currentUserProvider,
             MemberRepository memberRepository,
-            MessageDeletionRepository messageDeletionRepository
+            MessageDeletionRepository messageDeletionRepository,
+            SimpMessagingTemplate messagingTemplate
     ) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.currentUserProvider = currentUserProvider;
         this.memberRepository = memberRepository;
         this.messageDeletionRepository = messageDeletionRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Transactional
@@ -68,6 +78,21 @@ public class MessageService {
 
         messageRepository.save(message);
         message.getConversation().setUpdatedAt(Instant.now());
+
+
+        NewMessageEvent event = new NewMessageEvent(new MessageResponse(message));
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        messagingTemplate.convertAndSend(
+                                "/topic/conversations/" + conversationId,
+                                event
+                        );
+                    }
+                }
+        );
     }
 
     @Transactional(readOnly = true)
@@ -138,6 +163,20 @@ public class MessageService {
 
         messageRepository.save(message);
         message.getConversation().setUpdatedAt(Instant.now());
+
+        MessageDeletedEvent event = new MessageDeletedEvent(MDType.FOR_ALL, messageId, null);
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        messagingTemplate.convertAndSend(
+                                "/topic/conversations/" + conversationId,
+                                event
+                        );
+                    }
+                }
+        );
     }
 
     @Transactional
@@ -152,6 +191,17 @@ public class MessageService {
         md.setMessage(messageMember.getMessage());
         md.setMember(messageMember.getMember());
 
+        MessageDeletedEvent event = new MessageDeletedEvent(MDType.FOR_ONE, messageId, messageMember.getMember().getId());
+
         messageDeletionRepository.save(md);
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        messagingTemplate.convertAndSendToUser(String.valueOf(currentUser.getId()), "/queue/messages", event);
+                    }
+                }
+        );
     }
 }

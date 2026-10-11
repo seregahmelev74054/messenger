@@ -2,6 +2,7 @@ package com.example.messenger.MESSAGE.dto;
 
 import com.example.messenger.MEMBER.dto.MemberResponse;
 import com.example.messenger.MESSAGE.entity.Message;
+import com.example.messenger.webSocket.dto.Event;
 
 import java.time.Instant;
 

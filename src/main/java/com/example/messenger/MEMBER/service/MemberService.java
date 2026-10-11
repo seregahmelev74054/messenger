@@ -9,8 +9,13 @@ import com.example.messenger.MESSAGE.entity.Message;
 import com.example.messenger.MESSAGE.repository.MessageRepository;
 import com.example.messenger.USER.entity.User;
 import com.example.messenger.USER.service.CurrentUserProvider;
+import com.example.messenger.webSocket.dto.EventType;
+import com.example.messenger.webSocket.dto.MessageReadEvent;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.Optional;
 
@@ -20,15 +25,18 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final CurrentUserProvider currentUserProvider;
     private final MessageRepository messageRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public MemberService(
             MemberRepository memberRepository,
             CurrentUserProvider currentUserProvider,
-            MessageRepository messageRepository
+            MessageRepository messageRepository,
+            SimpMessagingTemplate messagingTemplate
     ) {
         this.memberRepository = memberRepository;
         this.currentUserProvider = currentUserProvider;
         this.messageRepository = messageRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Transactional
@@ -51,7 +59,23 @@ public class MemberService {
         Optional<Message> oldMessageOptional = messageRepository.findById(member.getLastReadMessageId());
 
         if (oldMessageOptional.isEmpty()) {
+
             member.setLastReadMessageId(lastReadMessageId);
+
+            MessageReadEvent event = new MessageReadEvent(member.getId(), lastReadMessageId);
+
+            TransactionSynchronizationManager.registerSynchronization(
+                    new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            messagingTemplate.convertAndSend(
+                                    "/topic/conversations/" + conversationId,
+                                    event
+                            );
+                        }
+                    }
+            );
+
             return;
         }
 
@@ -64,6 +88,20 @@ public class MemberService {
             throw new UnprocessableRequestException("");
 
         member.setLastReadMessageId(lastReadMessageId);
+
+        MessageReadEvent event = new MessageReadEvent(member.getId(), lastReadMessageId);
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        messagingTemplate.convertAndSend(
+                                "/topic/conversations/" + conversationId,
+                                event
+                        );
+                    }
+                }
+        );
     }
 
 }

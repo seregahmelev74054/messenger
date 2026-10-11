@@ -87,6 +87,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/auth/csrf").permitAll()
                         .requestMatchers("/actuator/health/**").permitAll()
+                        .requestMatchers("/ws").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated() )
 
                 .addFilterBefore(jwtAuthenticationFilter,
