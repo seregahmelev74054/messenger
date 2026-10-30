@@ -1,0 +1,87 @@
+package com.example.messenger.message.entity;
+
+import com.example.messenger.conversation.entity.Conversation;
+import com.example.messenger.member.entity.Member;
+import jakarta.persistence.*;
+
+import java.time.Instant;
+
+
+@Entity
+@Table(
+        name = "messages",
+        //uniqueConstraints = {@UniqueConstraint(columnNames = "login"), @UniqueConstraint(columnNames = "email")}
+        indexes = {
+                @Index(name = "idx_message_conversationId_createdAt_id", columnList = "conversation_id, created_at, id")
+        }
+)
+public class Message {
+
+    public Message() {
+
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "conversation_id", nullable = false)
+    private Conversation conversation;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sender_member_id", nullable = false)
+    private Member sender;
+
+    private String text;
+
+    private Instant createdAt;
+    @PrePersist
+    void onCreate() {
+        createdAt = Instant.now();
+    }
+
+    private Instant deletedAt;
+
+
+    public long getId() {
+        return id;
+    }
+
+    public Conversation getConversation() {
+        return conversation;
+    }
+
+    public Member getSender() {
+        return sender;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
+
+    public void setConversation(Conversation conversation) {
+        this.conversation = conversation;
+    }
+
+    public void setSender(Member sender) {
+        this.sender = sender;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setDeletedAt(Instant deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+}

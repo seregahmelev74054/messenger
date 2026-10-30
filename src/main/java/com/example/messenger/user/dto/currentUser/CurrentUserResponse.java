@@ -1,0 +1,46 @@
+package com.example.messenger.user.dto.currentUser;
+
+import com.example.messenger.user.entity.User;
+
+import java.time.Instant;
+
+public class CurrentUserResponse {
+
+    public CurrentUserResponse(User user) {
+        this.id = user.getId();
+        this.login = user.getLogin();
+        this.email = user.getEmail();
+        this.displayName = user.getDisplayName();
+        this.createdAt = user.getCreatedAt();
+    }
+
+    private long id;
+
+    private String login;
+
+    private String email;
+
+    private String displayName;
+
+    private Instant createdAt;
+
+    public long getId() {
+        return id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+}

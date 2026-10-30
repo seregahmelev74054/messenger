@@ -1,7 +1,7 @@
 package com.example.messenger.integration;
 
-import com.example.messenger.USER.entity.User;
-import com.example.messenger.USER.repository.UserRepository;
+import com.example.messenger.user.entity.User;
+import com.example.messenger.user.repository.UserRepository;
 import com.example.messenger.TestPostgresDb;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

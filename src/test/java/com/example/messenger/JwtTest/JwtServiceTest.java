@@ -1,17 +1,13 @@
 package com.example.messenger.JwtTest;
 
-import com.example.messenger.JWT.JwtProperties;
-import com.example.messenger.JWT.JwtService;
-import com.example.messenger.USER.entity.User;
-import io.jsonwebtoken.Claims;
+import com.example.messenger.jwt.JwtProperties;
+import com.example.messenger.jwt.JwtService;
+import com.example.messenger.user.entity.User;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.junit.jupiter.api.Test;
 
-import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 

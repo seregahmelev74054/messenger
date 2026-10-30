@@ -1,5 +1,8 @@
 spring:
 
+  environment:
+    corsHttp: ${CORS_HTTP}
+
   application:
     name: messenger
 

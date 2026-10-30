@@ -1,21 +1,19 @@
 package com.example.messenger;
 
-import com.example.messenger.CONVERSATION.entity.Conversation;
-import com.example.messenger.CONVERSATION.entity.ConversationType;
-import com.example.messenger.CONVERSATION.entity.ConversationVisibility;
-import com.example.messenger.CONVERSATION.repository.ConversationRepository;
-import com.example.messenger.MEMBER.entity.Member;
-import com.example.messenger.MEMBER.repository.MemberRepository;
-import com.example.messenger.MESSAGE.entity.Message;
-import com.example.messenger.MESSAGE.repository.MessageRepository;
-import com.example.messenger.USER.entity.User;
-import com.example.messenger.USER.repository.UserRepository;
+import com.example.messenger.conversation.entity.Conversation;
+import com.example.messenger.conversation.entity.ConversationType;
+import com.example.messenger.conversation.entity.ConversationVisibility;
+import com.example.messenger.conversation.repository.ConversationRepository;
+import com.example.messenger.member.entity.Member;
+import com.example.messenger.member.repository.MemberRepository;
+import com.example.messenger.message.entity.Message;
+import com.example.messenger.message.repository.MessageRepository;
+import com.example.messenger.user.entity.User;
+import com.example.messenger.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

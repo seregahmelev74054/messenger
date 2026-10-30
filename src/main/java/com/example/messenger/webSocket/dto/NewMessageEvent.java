@@ -1,6 +1,6 @@
 package com.example.messenger.webSocket.dto;
 
-import com.example.messenger.MESSAGE.dto.MessageResponse;
+import com.example.messenger.message.dto.MessageResponse;
 
 public class NewMessageEvent extends Event {
 

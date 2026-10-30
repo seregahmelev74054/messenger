@@ -1,13 +1,12 @@
 package com.example.messenger.configuration;
 
-import com.example.messenger.JWT.JwtAuthenticationFilter;
+import com.example.messenger.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -25,9 +24,14 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ConfigurationPropertiesProvider configurationPropertiesProvider;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            ConfigurationPropertiesProvider configurationPropertiesProvider
+    ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.configurationPropertiesProvider = configurationPropertiesProvider;
     }
 
     @Bean
@@ -38,10 +42,11 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:3000"
+                configurationPropertiesProvider.getCorsHttp()
         ));
 
         configuration.setAllowedMethods(List.of(

@@ -1,10 +1,10 @@
 package com.example.messenger.webSocket;
 
-import com.example.messenger.EXCEPTION.MemberNotFoundException;
-import com.example.messenger.JWT.JwtService;
-import com.example.messenger.MEMBER.entity.Member;
-import com.example.messenger.MEMBER.entity.MemberStatus;
-import com.example.messenger.MEMBER.repository.MemberRepository;
+import com.example.messenger.exception.MemberNotFoundException;
+import com.example.messenger.jwt.JwtService;
+import com.example.messenger.member.entity.Member;
+import com.example.messenger.member.entity.MemberStatus;
+import com.example.messenger.member.repository.MemberRepository;
 import io.jsonwebtoken.JwtException;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -63,11 +63,11 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
             try {
                 userId = jwtService.extractUserId(jwt);
             } catch (JwtException e) {
-                throw new BadCredentialsException("Invalid JWT");
+                throw new BadCredentialsException("Invalid jwt");
             }
 
             if (userId == null)
-                throw new BadCredentialsException("Invalid JWT");
+                throw new BadCredentialsException("Invalid jwt");
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userId,

@@ -1,0 +1,62 @@
+package com.example.messenger.user.controller;
+
+import com.example.messenger.user.dto.currentUser.CurrentUserResponse;
+import com.example.messenger.user.dto.login.request.LoginUserRequest;
+import com.example.messenger.user.dto.register.RegisterUserRequest;
+
+import com.example.messenger.user.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController (
+            UserService userService
+    ) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/api/v1/users")
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterUserRequest request) {
+
+        userService.register(request);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/v1/auth/csrf")
+    public CsrfToken csrf(CsrfToken token) {
+        return token;
+    }
+
+    @PostMapping("/api/v1/auth/login")
+    public ResponseEntity<Void> login(
+            @Valid @RequestBody LoginUserRequest request
+    ) {
+
+        ResponseCookie cookie = userService.login(request);
+
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
+    }
+
+    @GetMapping("/api/v1/users/me")
+    public ResponseEntity<CurrentUserResponse> currentUser() {
+        CurrentUserResponse response = userService.currentUser();
+
+        return ResponseEntity.ok(response);
+    }
+}
